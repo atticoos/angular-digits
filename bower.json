@@ -1,0 +1,10 @@
+{
+  "name": "angular-digits",
+  "version": "0.0.1",
+  "authors": [
+    "Atticus White <contact@atticuswhite.com>"
+  ],
+  "description": "AngularJS module for Twitter's Fabric Digits",
+  "main": "index.js",
+  "license": "MIT"
+}
