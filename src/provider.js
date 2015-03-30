@@ -1,24 +1,94 @@
 (function () {
   'use strict';
-
+  /* https://dev.twitter.com/twitter-kit/web/digits */
   function DigitsProvider () {
-    var getter;
-    this.consumerKey = null;
+    var consumerKey;
 
-    getter = function () {
-      return {
-        consumerKey: this.consumerKey
-      };
-    }.bind(this);
-
-    return {
-      setConsumerKey: function (consumerKey) {
-        this.consumerKey = consumerKey;
-      }.bind(this),
-      $get: getter
+    /**
+     * @name setConsumreKey
+     * @public
+     *
+     * @description
+     * Sets the Twitter public consumer key to be used with the Digits SDK
+     */
+    this.setConsumerKey = function (key) {
+      consumerKey = key;
     };
-  }
 
+    this.$get = [
+      '$rootScope',
+      '$log',
+      '$q',
+      '$window',
+      'DigitsResponseError',
+      'DigitsResponse',
+      function ($rootScope, $log, $q, $window, DigitsLoginError, DigitsResponse) {
+        var service = {},
+            conditionalApply;
+
+        conditionalApply = function (execution) {
+          if ($rootScope.$$phase) {
+            execution();
+          } else {
+            $rootScope.$apply(execution);
+          }
+        };
+
+        service.getConsumerKey = function () {
+          return consumerKey;
+        };
+
+        /**
+         * @name login
+         * @public
+         *
+         * @description
+         * Prompts the login popup and resolve the response
+         */
+        service.login = function () {
+          var deferred = $q.defer();
+
+          $window.Digits.logIn()
+          .done(function (response) {
+            conditionalApply(function () {
+              deferred.resolve(new DigitsResponse(response));
+            })
+          })
+          .fail(function (error) {
+            conditionalApply(function ) {
+              deferred.reject(new DigitsLoginError(error));
+            }
+          });
+          return deferred.promise;
+        };
+
+        /**
+         *  Checks if the user is already loggd in
+         */
+        service.isLoggedIn = function () {
+          var deferred = $q.defer();
+          $window.Digits.getLoginStatus()
+          .done(function (response) {
+            conditionalApply(function () {
+              if (response.status === 'authorized') {
+                deferred.resolve(response.status);
+              } else {
+                deferred.reject(response.status);
+              }
+            });
+          })
+          .fail(function () {
+            conditionalApply(function () {
+              deferred.reject();
+            });
+          });
+          return deferred.promise;
+        };
+
+        return service;
+      }
+    ];
+  }
   angular.module('atticoos.digits')
   .provider('Digits', [DigitsProvider]);
 }).apply(this);

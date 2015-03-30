@@ -8,13 +8,21 @@
     };
 
     function Response (responseObject) {
-      this.response = responseObject;
+      angular.forEach(responseObject, function (value, property) {
+        Object.defineProperty(this, property, {
+          enumerable: true,
+          configurable: false,
+          get: function () {
+            return value;
+          }
+        });
+      }.bind(this));
     }
 
     Response.prototype.getOAuthHeaders = function () {
       return {
-        authorization: this.response.oauth_echo_headers[HEADER.AUTHORIZATION],
-        url: this.response.oauth_echo_headers[HEADER.URL]
+        authorization: this.oauth_echo_headers[HEADER.AUTHORIZATION],
+        url: this.oauth_echo_headers[HEADER.URL]
       }
     };
 

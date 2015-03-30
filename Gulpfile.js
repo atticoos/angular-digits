@@ -13,7 +13,6 @@ gulp.task('build', function () {
   gulp.src([
     'src/digits.js',
     'src/provider.js',
-    'src/service.js',
     'src/digits-response.js',
     'src/digits-response-error.js'
   ])

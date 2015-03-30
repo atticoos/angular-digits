@@ -3,109 +3,103 @@
 
   angular.module('atticoos.digits', [])
   .run(['$window', 'Digits', function ($window, Digits) {
-    $window.Digits.init({consumerKey: Digits.consumerKey});
+    $window.Digits.init({consumerKey: Digits.getConsumerKey()});
   }]);
 }).apply(this);
 
 (function () {
   'use strict';
-
+  /* https://dev.twitter.com/twitter-kit/web/digits */
   function DigitsProvider () {
-    var getter;
-    this.consumerKey = null;
+    var consumerKey;
 
-    getter = function () {
-      return {
-        consumerKey: this.consumerKey
-      };
-    }.bind(this);
-
-    return {
-      setConsumerKey: function (consumerKey) {
-        this.consumerKey = consumerKey;
-      }.bind(this),
-      $get: getter
+    /**
+     * @name setConsumreKey
+     * @public
+     *
+     * @description
+     * Sets the Twitter public consumer key to be used with the Digits SDK
+     */
+    this.setConsumerKey = function (key) {
+      consumerKey = key;
     };
-  }
 
+    this.$get = [
+      '$rootScope',
+      '$log',
+      '$q',
+      '$window',
+      'DigitsResponseError',
+      'DigitsResponse',
+      function ($rootScope, $log, $q, $window, DigitsLoginError, DigitsResponse) {
+        var service = {},
+            conditionalApply;
+
+        conditionalApply = function (execution) {
+          if ($rootScope.$$phase) {
+            execution();
+          } else {
+            $rootScope.$apply(execution);
+          }
+        };
+
+        service.getConsumerKey = function () {
+          return consumerKey;
+        };
+
+        /**
+         * @name login
+         * @public
+         *
+         * @description
+         * Prompts the login popup and resolve the response
+         */
+        service.login = function () {
+          var deferred = $q.defer();
+
+          $window.Digits.logIn()
+          .done(function (response) {
+            conditionalApply(function () {
+              deferred.resolve(new DigitsResponse(response));
+            })
+          })
+          .fail(function (error) {
+            conditionalApply(function ) {
+              deferred.reject(new DigitsLoginError(error));
+            }
+          });
+          return deferred.promise;
+        };
+
+        /**
+         *  Checks if the user is already loggd in
+         */
+        service.isLoggedIn = function () {
+          var deferred = $q.defer();
+          $window.Digits.getLoginStatus()
+          .done(function (response) {
+            conditionalApply(function () {
+              if (response.status === 'authorized') {
+                deferred.resolve(response.status);
+              } else {
+                deferred.reject(response.status);
+              }
+            });
+          })
+          .fail(function () {
+            conditionalApply(function () {
+              deferred.reject();
+            });
+          });
+          return deferred.promise;
+        };
+
+        return service;
+      }
+    ];
+  }
   angular.module('atticoos.digits')
   .provider('Digits', [DigitsProvider]);
-}).apply(this);
-
-(function () {
-  'use strict';
-
-  function DigitsService ($rootScope, $window, $q, DigitsResponseError) {
-    var service = {},
-        conditionalApply;
-
-    conditionalApply = function (execution) {
-      if ($rootScope.$$phase) {
-        execution();
-      } else {
-        $rootScope.$apply(execution);
-      }
-    }
-
-    service.login = function () {
-      var deferred = $q.defer();
-
-      $window.Digits.logIn()
-      .done(function (response) {
-        conditionalApply(function () {
-          deferred.resolve(response);
-        });
-      })
-      .fail(function (error) {
-        conditionalApply(function () {
-          deferred.reject(new DigitsResponseError(error));
-        });
-      });
-
-      return deferred.promise;
-    };
-
-    service.isLoggedIn = function () {
-      var deferred = $q.defer();
-      $window.Digits.getLoginStatus()
-      .done(function (response) {
-        conditionalApply(function () {
-          if (response.status === 'authorized') {
-            deferred.resolve();
-          } else {
-            deferred.reject();
-          }
-        });
-      })
-      .fail(function () {
-        conditionalApply(function () {
-          deferred.reject();
-        });
-      });
-      return deferred.promise;
-    };
-
-    service.getLoginStatus = function () {
-      var deferred = $q.defer();
-      $window.Digits.getLoginStatus()
-      .done(function (response) {
-        $rootScope.$apply(function () {
-          deferred.resolve(response);
-        });
-      }).fail(function (error) {
-        $rootScope.$apply(function () {
-          deferred.reject(error);
-        });
-      });
-      return deferred.promise;
-    };
-
-    return service;
-  }
-
-  angular.module('atticoos.digits')
-  .factory('DigitsService', ['$rootScope', '$window', '$q', 'DigitsResponseError', DigitsService]);
-
 }).apply(this);
 
 (function () {
@@ -118,13 +112,21 @@
     };
 
     function Response (responseObject) {
-      this.response = responseObject;
+      angular.forEach(responseObject, function (value, property) {
+        Object.defineProperty(this, property, {
+          enumerable: true,
+          configurable: false,
+          get: function () {
+            return value;
+          }
+        });
+      }.bind(this));
     }
 
     Response.prototype.getOAuthHeaders = function () {
       return {
-        authorization: this.response.oauth_echo_headers[HEADER.AUTHORIZATION],
-        url: this.response.oauth_echo_headers[HEADER.URL]
+        authorization: this.oauth_echo_headers[HEADER.AUTHORIZATION],
+        url: this.oauth_echo_headers[HEADER.URL]
       }
     };
 
