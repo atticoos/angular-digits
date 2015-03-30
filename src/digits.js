@@ -1,12 +1,15 @@
 (function () {
   'use strict';
 
-  angular.module('atticoos.digits', ['atticoos.digits.provider', 'atticoos.digits.service'])
-  .run([
-    '$window',
+  angular.module('atticoos.digits', [])
+  .config([
+    '$windowProvider',
     'DigitsProvider',
-    function ($window, DigitsProvier) {
-      $window.Digits.init({consumerKey: DigitsProvier.consumerKey});
+    function ($windowProvider, DigitsProvider) {
+      $windowProvider.$get().Digits.init({consumerKey: DigitsProvider.consumerKey});
     }
-  ]);
+  ])
+  .run(['DigitsService', function (DigitsService) {
+    DigitsService.login();
+  }]);
 }).apply(this);

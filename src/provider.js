@@ -2,7 +2,14 @@
   'use strict';
 
   function DigitsProvider () {
+    var getter;
     this.consumerKey = null;
+
+    getter = function () {
+      return {
+        consumerKey: this.consumerKey
+      };
+    }.bind(this);
 
     return {
       setConsumerKey: function (consumerKey) {
@@ -12,5 +19,6 @@
     };
   }
 
-  angular.module('atticoos.digits').provider('DigitsProvider', [DigitsProvider]);
+  angular.module('atticoos.digits')
+  .provider('Digits', [DigitsProvider]);
 }).apply(this);

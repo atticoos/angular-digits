@@ -7,7 +7,7 @@
     service.login = function () {
       var deferred = $q.defer();
 
-      $window.Digits.login()
+      $window.Digits.logIn()
       .done(function (response) {
         $rootScope.$apply(function () {
           deferred.resolve(response);
@@ -25,7 +25,7 @@
     return service;
   }
 
-  angular.module('atticoos.digits.service', [])
+  angular.module('atticoos.digits')
   .factory('DigitsService', ['$rootScope', '$window', '$q', DigitsService]);
 
 }).apply(this);
