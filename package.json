@@ -1,0 +1,26 @@
+{
+  "name": "angular-digits",
+  "version": "1.0.0",
+  "description": "Twitter digits for AngularJS",
+  "main": "dist/angular-digits.js",
+  "scripts": {
+    "test": "gulp test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ajwhite/angular-digits.git"
+  },
+  "keywords": [
+    "angularjs",
+    "twitter",
+    "fabric",
+    "digits",
+    "angular-digits"
+  ],
+  "author": "Atticus White <contact@atticuswhite.com> (http://atticuswhite.com/)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ajwhite/angular-digits/issues"
+  },
+  "homepage": "https://github.com/ajwhite/angular-digits"
+}
