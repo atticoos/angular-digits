@@ -2,14 +2,7 @@
   'use strict';
 
   angular.module('atticoos.digits', [])
-  .config([
-    '$windowProvider',
-    'DigitsProvider',
-    function ($windowProvider, DigitsProvider) {
-      $windowProvider.$get().Digits.init({consumerKey: DigitsProvider.consumerKey});
-    }
-  ])
-  .run(['DigitsService', function (DigitsService) {
-    DigitsService.login();
+  .run(['$window', 'Digits', function ($window, Digits) {
+    $window.Digits.init({consumerKey: Digits.consumerKey});
   }]);
 }).apply(this);
