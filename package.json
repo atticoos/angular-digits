@@ -1,6 +1,6 @@
 {
   "name": "angular-digits",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Twitter digits for AngularJS",
   "main": "dist/angular-digits.js",
   "scripts": {
