@@ -4,6 +4,7 @@
   "authors": [
     "Atticus White <contact@atticuswhite.com>"
   ],
+  "ignore": [],
   "description": "AngularJS module for Twitter's Fabric Digits",
   "main": "index.js",
   "license": "MIT",
