@@ -64,9 +64,9 @@
             })
           })
           .fail(function (error) {
-            conditionalApply(function ) {
+            conditionalApply(function () {
               deferred.reject(new DigitsLoginError(error));
-            }
+            })
           });
           return deferred.promise;
         };
