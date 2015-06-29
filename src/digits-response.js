@@ -3,7 +3,7 @@
 
   function DigitsResponse () {
     var HEADER = {
-      AUHORIZATION: 'X-Verify-Credentials-Authorization',
+      AUTHORIZATION: 'X-Verify-Credentials-Authorization',
       URL: 'X-Auth-Service-Provider'
     };
 
