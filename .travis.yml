@@ -11,10 +11,11 @@ node_js:
 
 cache:
   directories:
-  - node_modules
-  - bower_components
+    - node_modules
+    - bower_components
 
 before_script:
+- npm install
 - bower install
 
 notifications:
