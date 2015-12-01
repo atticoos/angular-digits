@@ -45,19 +45,21 @@
          * @description
          * Prompts the login popup and resolve the response
          */
-        service.login = function () {
+        service.login = function (options) {
           var deferred = $q.defer();
 
-          $window.Digits.logIn()
+          options = angular.isDefined(options) ? options : {};
+
+          $window.Digits.logIn(options)
           .done(function (response) {
             conditionalApply(function () {
               deferred.resolve(new DigitsResponse(response));
-            })
+            });
           })
           .fail(function (error) {
             conditionalApply(function () {
               deferred.reject(new DigitsLoginError(error));
-            })
+            });
           });
           return deferred.promise;
         };
