@@ -14,7 +14,12 @@ angular.module('app', ['atticoos.digits'])
 })
 
 .run(function (Digits) {
-  Digits.login().then(function (loginResponse) {
+  var options = {
+    accountFields: Digits.AccountFields.Email // Access Email Addresses
+  };
+
+
+  Digits.login(options).then(function (loginResponse) {
     // successfully logged in
   }).catch(function (error) {
     // a decorated error object describing the issue logging in
@@ -28,6 +33,12 @@ angular.module('app', ['atticoos.digits'])
   });
 });
 ```
+
+## Login Options
+
+You can customize the Digits for Web sign in flow to collect user email addresses or pre-fill phone number information, based on your app’s needs.
+
+For more informations go to [Digits SDK Sign in Options Doc](https://docs.fabric.io/web/digits/sign-in-options.html#callback-url)
 
 ## Response Objects
 This wrapper comes with some convenient models for better transparency of state and response information from the Digits SDK. It is suggested by the [Digits SDK Docs](https://dev.twitter.com/twitter-kit/web/digits) that you securely verify the response data when logging in.

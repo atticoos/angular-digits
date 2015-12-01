@@ -23,7 +23,7 @@
       return {
         authorization: this.oauth_echo_headers[HEADER.AUTHORIZATION],
         url: this.oauth_echo_headers[HEADER.URL]
-      }
+      };
     };
 
     return Response;
