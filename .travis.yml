@@ -1,0 +1,23 @@
+sudo: false
+language: node_js
+node_js:
+- '0.10'
+- '0.11'
+- '0.12'
+- '4.0'
+- '4.1'
+- '4.2'
+- iojs
+
+cache:
+  directories:
+    - node_modules
+    - bower_components
+
+before_script:
+- npm install
+- bower install
+
+notifications:
+  slack:
+    secure: KO5rOSJsJF+7Hbte0uWZvyjqtL8Au7Ka9uIm0DKEsW2/ktuUUiN3YOnjcowjc/f/XZeESryHyJ11itsc2NimTVvXu+yFxd6DFklx0PuMhTDztklPjaGEysSussMZ1hZJ8RUDBIBbH56FwTSqlbtOu046z9i0tcwXw89DwQnt+GE=

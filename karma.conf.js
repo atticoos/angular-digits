@@ -7,7 +7,10 @@ module.exports = function (config) {
       'bower_components/angular/angular.js',
       'bower_components/angular-mocks/angular-mocks.js',
       'test/polyfill.js',
-      'src/*.js',
+      'src/digits.js',
+      'src/provider.js',
+      'src/digits-response.js',
+      'src/digits-response-error.js',
       'test/**/*.spec.js'
     ],
     reporters: ['dots']
